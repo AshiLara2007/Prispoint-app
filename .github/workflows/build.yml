@@ -11,7 +11,7 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Dependencies and Build Python
+      - name: Build Python Backend
         run: |
           pip install flask psutil pyinstaller
           pyinstaller --noconsole --onefile --add-data "templates;templates" app.py
@@ -25,6 +25,8 @@ jobs:
         run: |
           npm install
           npm run build:win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Windows App
         uses: actions/upload-artifact@v4

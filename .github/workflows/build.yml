@@ -1,10 +1,16 @@
-name: Build Windows App
-on: [push]
+name: Build and Release
+on:
+  push:
+    tags:
+      - 'v*' # v1.0.0, v1.0.1 වැනි tag එකක් push කළ විට ක්‍රියාත්මක වේ
+  workflow_dispatch: # ඔබට අවශ්‍ය විටෙක බටන් එකක් මඟින් build එක පටන් ගැනීමට
+
 jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -14,21 +20,23 @@ jobs:
       - name: Build Python Backend
         run: |
           pip install flask psutil pyinstaller
-          pyinstaller --noconsole --onefile --add-data "templates;templates" app.py
+          pyinstaller --noconsole --onefile --icon="assets/icon.ico" --add-data "templates;templates" app.py
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Build Electron App
-        run: |
-          npm install
-          npm run build:win
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Dependencies
+        run: npm install
 
-      - name: Upload Windows App
+      - name: Build and Publish Electron App
+        # මෙහි publish always මඟින් GitHub Release එකට ගොනු එකතු කරයි
+        run: npm run build:win -- --publish always
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifact (Backup)
         uses: actions/upload-artifact@v4
         with:
           name: Windows-Installer

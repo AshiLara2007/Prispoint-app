@@ -1,35 +1,36 @@
 {
   "name": "prispoint-vcs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Prispoint Version Control System",
-  "author": {
-    "name": "Lara",
-    "email": "lara@example.com"
-  },
-  "homepage": "https://prispoint.com",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build:linux": "electron-builder --linux",
-    "build:win": "electron-builder --win"
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux"
   },
   "build": {
     "appId": "com.prispoint.vcs",
     "directories": {
       "output": "dist-app"
     },
-    "files": [
-      "**/*",
-      "dist/app"
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "AshiLara2007",
+        "repo": "prispoint.app"
+      }
     ],
-    "linux": {
-      "target": ["AppImage", "deb"],
-      "maintainer": "Lara <lara@example.com>",
-      "category": "Development"
-    },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.ico"
     }
+  },
+  "dependencies": {
+    "electron-updater": "^6.1.1"
   },
   "devDependencies": {
     "electron": "^25.0.0",

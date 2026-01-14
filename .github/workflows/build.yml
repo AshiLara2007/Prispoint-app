@@ -11,7 +11,7 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Build Python Backend
+      - name: Install Dependencies and Build Python
         run: |
           pip install flask psutil pyinstaller
           pyinstaller --noconsole --onefile --add-data "templates;templates" app.py
